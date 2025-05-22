@@ -1,0 +1,17 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const multer_1 = require("../config/multer");
+const upload_controller_1 = require("../controllers/upload.controller");
+const router = (0, express_1.Router)();
+router.post('/song/media', multer_1.upload.single('media'), upload_controller_1.uploadController);
+router.post('/song/image', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/song/media/:name', multer_1.upload.single('media'), upload_controller_1.uploadController);
+router.post('/song/image/:name', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/artist/image', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/artist/image/:name', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/album/image', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/album/image/:name', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/user/image', multer_1.upload.single('image'), upload_controller_1.uploadController);
+router.post('/user/image/:name', multer_1.upload.single('image'), upload_controller_1.uploadController);
+exports.default = router;

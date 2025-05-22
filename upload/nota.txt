@@ -1,0 +1,49 @@
+npm init -y
+/----------------TYPE SCRIPT-------------------
+npm i typescript -D
+npx tsc --init
+
+descomentar en tsconfig.json:
+"rootDir": "./src", 
+"outDir": "./dist",
+
+npm i ts-node-dev -D
+
+en package.json:
+"scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+},
+
+npm run dev
+npm run build
+npm start
+/-------------modulos--------------------------------
+npm i express morgan cors
+npm i @types/express @types/morgan @types/cors -D
+--------------typeORM------------------------
+npm install typeorm --save
+npm install reflect-metadata --save
+npm install @types/node --save-dev
+
+en tsconfig.json:
+"strictPropertyInitialization": false, 
+"experimentalDecorators": true,
+"emitDecoratorMetadata": true,
+
+en el acrivo principal "src/index.ts" poner primero: import "reflect-metadata"
+------------BASE DE DATOS--------------------
+npm install sqlite3 --save
+
+
+
+
+--------------SECUriTY-----------------------
+npm i bcrypt jsonwebtoken cookie-parser
+npm i @types/bcrypt @types/jsonwebtoken @types/cookie-parser -D
+
+
+------
+npm i ejs
+npm i @types/ejs -D
