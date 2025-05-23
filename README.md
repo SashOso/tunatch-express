@@ -1,6 +1,6 @@
-# 🎵 Tuneatch API
+# 🎵 Tuneatch
 
-Tuneatch es una API RESTful construida con Express.js que gestiona una plataforma musical con usuarios, roles, artistas, álbumes, géneros, canciones y playlists.
+Tuneatch es una plataforma intuitiva y dinámica diseñada para organizar, explorar y personalizar tu colección musical. Desde la creación de playlists hasta la gestión de álbumes, artistas y canciones, Tuneatch te ofrece las herramientas necesarias para tener el control total de tu biblioteca musical, todo desde un solo lugar.
 
 ## 🗃️ Estructura de Base de Datos
 
@@ -91,5 +91,5 @@ Tuneatch es una API RESTful construida con Express.js que gestiona una plataform
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/SashOso/tunatch-api.git
-   cd tunatch-api
+   git clone https://github.com/SashOso/tunatch-express.git
+   cd tunatch-express

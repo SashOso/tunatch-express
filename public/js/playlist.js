@@ -1,11 +1,10 @@
 import playlistService from "./api/playlist.service.js";
 
 const video = document.getElementById("video");
-const list_body = document.getElementById("playlist-songs");
+const table_data = document.getElementById("table_data");
 
 
 let song_index=-1;
-let songs=[];
 const formatTime=(seconds)=>{
     if (!seconds && seconds !== 0) return '--:--';
 
@@ -23,12 +22,12 @@ const formatTime=(seconds)=>{
 
 function setSongIndex(index) {
     song_index = index;
-    //----------estilo-------------//
-    list_body.querySelectorAll('tr').forEach(tr => {
+    //----------estilo de los td-------------//
+    table_data.querySelectorAll('tr').forEach(tr => {
         tr.classList.remove('active');
     });
 
-    const selectedRow = list_body.querySelector(`tr[data-index="${index}"]`);
+    const selectedRow = table_data.querySelector(`tr[data-index="${index}"]`);
     if (selectedRow) {
         selectedRow.classList.add('active');
     }
@@ -41,36 +40,18 @@ function setSongIndex(index) {
 
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const data = await playlistService.getById(1);
-    if(data){
-        songs=data.songs
-        
-        //------------songs------------//
-        const songs_html = songs.map((song, index) => `
-            <tr data-index="${index}">
-                <td>${index + 1}</td>
-                <td class="title-item">
-                    <img src="${song?.image_path ?? '/img/song.png'}" alt="${song?.title ?? '-'}">
-                    <span class="title">${song?.title ?? '-'}</span>
-                    <span class="artist">${song?.artist?.name ?? '-'}</span>
-                </td>
-                <td>${song?.album?.title ?? '-'}</td>
-                <td>${formatTime(song?.duration ?? 0)}</td>
-            </tr>
-        `).join('');
-        list_body.innerHTML = songs_html;
-        list_body.querySelectorAll("tr").forEach((tr, index) => {
-            tr.addEventListener("click", () => {
-                setSongIndex(index);
-            });
+    //------------cambiar el index con los tr------------//
+    table_data.querySelectorAll("tr").forEach((tr, index) => {
+        tr.addEventListener("click", () => {
+            setSongIndex(index);
         });
-        //-------------------------------------------//
-    }
+    });
+    //-----------------------------------------------------//
 });
 video.addEventListener("ended", () => {
     let siguiente = song_index + 1;
     if (siguiente >= songs.length) {
-        siguiente = 0; // volver al inicio
+        siguiente = 0;
     }
     setSongIndex(siguiente);
 });

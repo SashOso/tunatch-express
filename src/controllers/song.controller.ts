@@ -1,67 +1,38 @@
-import {Request,Response} from 'express';
-import { Song } from '../entities/Song';
+import { Request, Response } from "express";
+import { SongService } from "../services/song.service";
 
-export const getAll= async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const list=await Song.find();
-        res.json(list)
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const getOne=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id } = req.params;
-        
-        const item = await Song.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
+export const SongController = {
+    getAll: async (_: Request, res: Response) => {
+        const items = await SongService.findAll();
+        res.json(items);
+    },
 
-        res.json(item)
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const create=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id, ...data } = req.body;
-        const item = Object.assign(new Song(), data);
-        await item.save();
-        res.json(item);
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const update=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id, ...data } = req.body;
+    getOne: async (req: Request, res: Response) => {
+        const item = await SongService.findById(+req.params.id);
+        if (item) res.json(item);
+        else res.status(404).json({ message: "Not found" });
+    },
 
-        const item = await Song.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
+    create: async (req: Request, res: Response) => {
+        const newItem = await SongService.create(req.body);
+        res.status(201).json(newItem);
+    },
 
-        Object.assign(item, data);
+    update: async (req: Request, res: Response) => {
+        try {
+            const updatedItem = await SongService.update(+req.params.id, req.body);
+            res.json(updatedItem);
+        } catch (err: any) {
+            res.status(404).json({ message: err.message || "Update failed" });
+        }
+    },
 
-        await item.save();
-        res.status(200).json(item);
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-
-export const remove = async (req: Request, res: Response): Promise<void>  => {
-    try {
-        const { id } = req.params;
-
-        const item = await Song.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
-
-        await Song.remove(item);
-        res.status(200).json({ message: "Deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
+    delete: async (req: Request, res: Response) => {
+        try {
+            await SongService.delete(+req.params.id);
+            res.status(204).send();
+        } catch (err: any) {
+            res.status(404).json({ message: err.message || "Delete failed" });
+        }
     }
 };

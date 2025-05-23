@@ -1,44 +1,51 @@
 <div class="playlist">
+    <!----------------------------------------->
     <section class="playlist-header">
         <img class="playlist-cover" src="/img/playlist.png" alt="">
         <div  class="playlist-details" >
             <small>PLAYLIST</small>
-            <span class="playlist-title">TITLE</span>
-            <span class="playlist-owner">owner</span>
+            <span class="playlist-title"><%= playlist?.name || '-' %></span>
+            <span class="playlist-owner">@<%= playlist?.user?.username || '-' %></span>
         </div>
+        <a class="btn-edit" href="/playlist-register/1">
+            <img src="/icons/pen.svg" alt="">
+        </a>
     </section>
     <!----------------------------------------->
-    <section class="playlist-main">
-        <div class="playlist-list">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>TITLE</th>
-                        <th>ALBUM</th>
-                        <th>DURATION</th>
-                    </tr>
-                </thead>
-                <tbody id="playlist-songs">
-                    <tr class="active">
-                        <td>1</td>
-                        <td class="title-item">
-                            <img src="/img/song.png" alt="">
-                            <span class="title">Triller</span>
-                            <span class="artist">Michael Jackson</span>
-                        </td>
-                        <td>ALBUM X</td>
-                        <td>0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <section class="playlist-song">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>TITLE</th>
+                    <th>ALBUM</th>
+                    <th>DURATION</th>
+                </tr>
+            </thead>
+            <tbody id="table_data">
+            <% playlist?.songs.forEach((song, index) => { %>
+                <tr data-index="<%= index %>">
+                    <td><%= index + 1 %></td>
+                    <td class="title-item">
+                        <img src="<%= song.image_path || '/img/song.png' %>" alt="<%= song.title || '-' %>">
+                        <span class="title"><%= song.title || '-' %></span>
+                        <span class="artist"><%= song.artist?.name || '-' %></span>
+                    </td>
+                    <td><%= song.album?.title || '-' %></td>
+                    <td><%= 0 %></td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    </section>
+    <!----------------------------------------->
+    <section class="playlist-video">
         <video id="video" poster="/img/music.webp" src="" controls></video>
     </section>
     <!----------------------------------------->
-    <section class="playlist-footer">
-
-    </section>
 </div>
 
+<script>
+  const songs = <%- JSON.stringify(playlist?.songs || []) %>;
+</script>
 <script src="/js/playlist.js" type="module"></script>

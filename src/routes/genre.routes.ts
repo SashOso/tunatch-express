@@ -1,12 +1,12 @@
-import {Router} from 'express';
-import {create, getAll, remove, update,getOne} from '../controllers/genre.controller';
+import express from 'express';
+import {GenreController} from '../controllers/genre.controller';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/', create);
-router.get('/', getAll);
-router.get('/:id', getOne);
-router.put('/', update);
-router.delete('/:id', remove);
+router.post('/', GenreController.create);
+router.get('/', GenreController.getAll);
+router.get('/:id', GenreController.getOne);
+router.put('/', GenreController.update);
+router.delete('/:id', GenreController.delete);
 
 export default router;

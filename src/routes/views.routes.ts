@@ -1,4 +1,5 @@
 import {Request, Response, Router} from 'express';
+import { PlaylistService } from '../services/playlist.service';
 
 const router = Router();
 
@@ -14,8 +15,9 @@ router.get('/artists',(req:Request,res:Response)=>{
 router.get('/songs',(req:Request,res:Response)=>{
     res.render("pages/songs")
 })
-router.get('/playlist/:id',(req:Request,res:Response)=>{
-    res.render("pages/playlist",{id:req.params.id||null})
+router.get('/playlist/:id',async(req:Request,res:Response)=>{
+    const data=await PlaylistService.findById(parseInt(req.params.id));
+    res.render("pages/playlist",{playlist:data})
 })
 router.get('/playlist-register',(req:Request,res:Response)=>{
     res.render("pages/playlist-register",{id:null})

@@ -1,12 +1,12 @@
-import {Router} from 'express';
-import {create, getAll, remove, update,getOne} from '../controllers/song.controller';
+import express from 'express';
+import {SongController} from '../controllers/song.controller';
 
-const router = Router();
+const router = express.Router();
 
-router.post('/', create);
-router.get('/', getAll);
-router.get('/:id', getOne);
-router.put('/', update);
-router.delete('/:id', remove);
+router.post('/', SongController.create);
+router.get('/', SongController.getAll);
+router.get('/:id', SongController.getOne);
+router.put('/', SongController.update);
+router.delete('/:id', SongController.delete);
 
 export default router;

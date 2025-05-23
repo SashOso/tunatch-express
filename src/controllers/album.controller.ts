@@ -1,67 +1,38 @@
-import {Request,Response} from 'express';
-import { Album } from '../entities/Album';
+import { Request, Response } from "express";
+import { AlbumService } from "../services/album.service";
 
-export const getAll= async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const list=await Album.find();
-        res.json(list)
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const getOne=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id } = req.params;
-        
-        const item = await Album.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
+export const AlbumController = {
+    getAll: async (_: Request, res: Response) => {
+        const items = await AlbumService.findAll();
+        res.json(items);
+    },
 
-        res.json(item)
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const create=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id, ...data } = req.body;
-        const item = Object.assign(new Album(), data);
-        await item.save();
-        res.json(item);
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const update=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id, ...data } = req.body;
+    getOne: async (req: Request, res: Response) => {
+        const item = await AlbumService.findById(+req.params.id);
+        if (item) res.json(item);
+        else res.status(404).json({ message: "Not found" });
+    },
 
-        const item = await Album.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
-        
-        Object.assign(item, data);
+    create: async (req: Request, res: Response) => {
+        const newItem = await AlbumService.create(req.body);
+        res.status(201).json(newItem);
+    },
 
-        await item.save();
-        res.status(200).json(item);
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
+    update: async (req: Request, res: Response) => {
+        try {
+            const updatedItem = await AlbumService.update(+req.params.id, req.body);
+            res.json(updatedItem);
+        } catch (err: any) {
+            res.status(404).json({ message: err.message || "Update failed" });
+        }
+    },
 
-export const remove = async (req: Request, res: Response): Promise<void>  => {
-    try {
-        const { id } = req.params;
-
-        const item = await Album.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
-
-        await Album.remove(item);
-        res.status(200).json({ message: "Deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
+    delete: async (req: Request, res: Response) => {
+        try {
+            await AlbumService.delete(+req.params.id);
+            res.status(204).send();
+        } catch (err: any) {
+            res.status(404).json({ message: err.message || "Delete failed" });
+        }
     }
 };

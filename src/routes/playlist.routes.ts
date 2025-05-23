@@ -1,12 +1,12 @@
 import express from 'express';
-import {create, getAll, remove, update,getOne} from '../controllers/playlist.controller';
+import {PlaylistController} from '../controllers/playlist.controller';
 
 const router = express.Router();
 
-router.post('/', create);
-router.get('/', getAll);
-router.get('/:id', getOne);
-router.put('/', update);
-router.delete('/:id', remove);
+router.post('/', PlaylistController.create);
+router.get('/', PlaylistController.getAll);
+router.get('/:id', PlaylistController.getOne);
+router.put('/', PlaylistController.update);
+router.delete('/:id', PlaylistController.delete);
 
 export default router;

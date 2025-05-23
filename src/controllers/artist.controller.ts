@@ -1,67 +1,38 @@
-import {Request,Response} from 'express';
-import { Artist } from '../entities/Artist';
+import { Request, Response } from "express";
+import { ArtistService } from "../services/artist.service";
 
-export const getAll= async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const list=await Artist.find();
-        res.json(list)
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const getOne=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id } = req.params;
-        
-        const item = await Artist.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
+export const ArtistController = {
+    getAll: async (_: Request, res: Response) => {
+        const items = await ArtistService.findAll();
+        res.json(items);
+    },
 
-        res.json(item)
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const create=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id, ...data } = req.body;
-        const item = Object.assign(new Artist(), data);
-        await item.save();
-        res.json(item);
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-export const update=  async(req:Request,res:Response): Promise<void> =>{
-    try{
-        const { id, ...data } = req.body;
+    getOne: async (req: Request, res: Response) => {
+        const item = await ArtistService.findById(+req.params.id);
+        if (item) res.json(item);
+        else res.status(404).json({ message: "Not found" });
+    },
 
-        const item = await Artist.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
+    create: async (req: Request, res: Response) => {
+        const newItem = await ArtistService.create(req.body);
+        res.status(201).json(newItem);
+    },
 
-        Object.assign(item, data);
+    update: async (req: Request, res: Response) => {
+        try {
+            const updatedItem = await ArtistService.update(+req.params.id, req.body);
+            res.json(updatedItem);
+        } catch (err: any) {
+            res.status(404).json({ message: err.message || "Update failed" });
+        }
+    },
 
-        await item.save();
-        res.status(200).json(item);
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
-    }
-}
-
-export const remove = async (req: Request, res: Response): Promise<void>  => {
-    try {
-        const { id } = req.params;
-
-        const item = await Artist.findOne({where: { id: parseInt(id) }});
-        if (!item) { res.status(404).json({ message: "Not found" }); return; }
-
-        await Artist.remove(item);
-        res.status(200).json({ message: "Deleted successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error" }); 
-        return;
+    delete: async (req: Request, res: Response) => {
+        try {
+            await ArtistService.delete(+req.params.id);
+            res.status(204).send();
+        } catch (err: any) {
+            res.status(404).json({ message: err.message || "Delete failed" });
+        }
     }
 };
